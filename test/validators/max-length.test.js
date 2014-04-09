@@ -19,7 +19,7 @@ describe('Test `max-length` validator', function() {
 
   it('should not validate', function() {
     maxLength(model, 'password').should.not.be.true;
-    maxLength(model, 'password').should.be.a('string');
+    maxLength(model, 'password').should.be.a.String;;
   });
 
   it('should allow changing the error message', function() {

@@ -113,14 +113,14 @@ describe('Test options utilities', function() {
       [
         -1.234, -1, 0, 1, 1.234
       ].forEach(function(val) {
-        optUtils.getNumber(val).should.be.a('number');
-        optUtils.getNumber(val, 'foo').should.be.a('number');
-        optUtils.getNumber(val, 'foo', false).should.be.a('number');
+        optUtils.getNumber(val).should.be.a.Number;
+        optUtils.getNumber(val, 'foo').should.be.a.Number;
+        optUtils.getNumber(val, 'foo', false).should.be.a.Number;
 
         // valid for numbers as a string, too!
-        optUtils.getNumber(String(val)).should.be.a('number');
-        optUtils.getNumber(String(val), 'foo').should.be.a('number');
-        optUtils.getNumber(String(val), 'foo', false).should.be.a('number');
+        optUtils.getNumber(String(val)).should.be.a.Number;
+        optUtils.getNumber(String(val), 'foo').should.be.a.Number;
+        optUtils.getNumber(String(val), 'foo', false).should.be.a.Number;
       });
     });
 
@@ -128,12 +128,12 @@ describe('Test options utilities', function() {
       [
         -1.234, -1, 0, 1, 1.234
       ].forEach(function(val) {
-        optUtils.getNumber({ foo: val }, 'foo').should.be.a('number');
-        optUtils.getNumber({ foo: val }, 'foo', false).should.be.a('number');
+        optUtils.getNumber({ foo: val }, 'foo').should.be.a.Number;
+        optUtils.getNumber({ foo: val }, 'foo', false).should.be.a.Number;
 
         // valid for numbers as a string, too!
-        optUtils.getNumber({ foo: String(val) }, 'foo').should.be.a('number');
-        optUtils.getNumber({ foo: String(val) }, 'foo', false).should.be.a('number');
+        optUtils.getNumber({ foo: String(val) }, 'foo').should.be.a.Number;
+        optUtils.getNumber({ foo: String(val) }, 'foo', false).should.be.a.Number;
       });
     });
 
@@ -162,14 +162,14 @@ describe('Test options utilities', function() {
       [
         -1, 0, 1  // note : floats will be converted to ints
       ].forEach(function(val) {
-        optUtils.getInteger(val).should.be.a('number');
-        optUtils.getInteger(val, 'foo').should.be.a('number');
-        optUtils.getInteger(val, 'foo', false).should.be.a('number');
+        optUtils.getInteger(val).should.be.a.Number;;
+        optUtils.getInteger(val, 'foo').should.be.a.Number;;
+        optUtils.getInteger(val, 'foo', false).should.be.a.Number;;
 
         // valid for numbers as a string, too!
-        optUtils.getInteger(String(val)).should.be.a('number');
-        optUtils.getInteger(String(val), 'foo').should.be.a('number');
-        optUtils.getInteger(String(val), 'foo', false).should.be.a('number');
+        optUtils.getInteger(String(val)).should.be.a.Number;;
+        optUtils.getInteger(String(val), 'foo').should.be.a.Number;;
+        optUtils.getInteger(String(val), 'foo', false).should.be.a.Number;;
       });
     });
 
@@ -177,12 +177,12 @@ describe('Test options utilities', function() {
       [
         -1, 0, 1
       ].forEach(function(val) {
-        optUtils.getInteger({ foo: val }, 'foo').should.be.a('number');
-        optUtils.getInteger({ foo: val }, 'foo', false).should.be.a('number');
+        optUtils.getInteger({ foo: val }, 'foo').should.be.a.Number;;
+        optUtils.getInteger({ foo: val }, 'foo', false).should.be.a.Number;;
 
         // valid for numbers as a string, too!
-        optUtils.getInteger({ foo: String(val) }, 'foo').should.be.a('number');
-        optUtils.getInteger({ foo: String(val) }, 'foo', false).should.be.a('number');
+        optUtils.getInteger({ foo: String(val) }, 'foo').should.be.a.Number;;
+        optUtils.getInteger({ foo: String(val) }, 'foo', false).should.be.a.Number;;
       });
     });
 
@@ -211,14 +211,14 @@ describe('Test options utilities', function() {
       [
         "", "bar"
       ].forEach(function(val) {
-        optUtils.getString(val).should.be.a('string');
-        optUtils.getString(val, 'foo').should.be.a('string');
-        optUtils.getString(val, 'foo', false).should.be.a('string');
+        optUtils.getString(val).should.be.a.String;;
+        optUtils.getString(val, 'foo').should.be.a.String;;
+        optUtils.getString(val, 'foo', false).should.be.a.String;;
 
         // test for explicit String instances, too!
-        optUtils.getString(String(val)).should.be.a('string');
-        optUtils.getString(String(val), 'foo').should.be.a('string');
-        optUtils.getString(String(val), 'foo', false).should.be.a('string');
+        optUtils.getString(String(val)).should.be.a.String;;
+        optUtils.getString(String(val), 'foo').should.be.a.String;;
+        optUtils.getString(String(val), 'foo', false).should.be.a.String;;
       });
     });
 
@@ -226,12 +226,12 @@ describe('Test options utilities', function() {
       [
         "", "bar"
       ].forEach(function(val) {
-        optUtils.getString({ foo: val }, 'foo').should.be.a('string');
-        optUtils.getString({ foo: val }, 'foo', false).should.be.a('string');
+        optUtils.getString({ foo: val }, 'foo').should.be.a.String;;
+        optUtils.getString({ foo: val }, 'foo', false).should.be.a.String;;
 
         // test for explicit String instances, too!
-        optUtils.getString({ foo: String(val) }, 'foo').should.be.a('string');
-        optUtils.getString({ foo: String(val) }, 'foo', false).should.be.a('string');
+        optUtils.getString({ foo: String(val) }, 'foo').should.be.a.String;;
+        optUtils.getString({ foo: String(val) }, 'foo', false).should.be.a.String;;
       });
     });
 

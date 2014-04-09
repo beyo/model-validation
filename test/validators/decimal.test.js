@@ -2,8 +2,35 @@
 var decimal = require('../../lib/validators/decimal');
 
 describe('Test `decimal` validator', function() {
-  var model = {
-    __data: {
+  var TestModel;
+  var model;
+
+  var customMessage = "Testing decimal successful!";
+  var options;
+
+  var translator = function * (msg) { return msg; };
+  var noop = function * () {};
+
+  before(function () {
+    TestModel = Model.define('DecimalTestModel', {
+      attributes: {
+        positive:      { type: 'int' },
+        negative:      { type: 'int' },
+        zero:          { type: 'int' },
+        floatPositive: { type: 'float' },
+        floatNegative: { type: 'float' },
+        floatZero:     { type: 'float' },
+        foo:           { type: 'text' }
+      }
+    });
+  });
+
+  beforeEach(function () {
+    options = {
+       values: ["a", true, null]
+    };
+
+    model = TestModel({
       positive: 123,
       negative: -123,
       zero: 0,
@@ -11,9 +38,9 @@ describe('Test `decimal` validator', function() {
       floatNegative: -123.456,
       floatZero: '0.0',
       foo: "bar"
-    }
-  };
-  var customMessage = "Testing decimal successful!";
+    });
+  });
+
 
   it('should validate', function() {
     [true, undefined, {}].forEach(function(options) {
@@ -81,15 +108,15 @@ describe('Test `decimal` validator', function() {
 
   it('should not validate', function() {
     decimal(model, 'foo').should.not.be.true;
-    decimal(model, 'foo').should.be.a('string');
+    decimal(model, 'foo').should.be.a.String;;
     decimal(model, 'foo', true).should.not.be.true;
-    decimal(model, 'foo', true).should.be.a('string');
+    decimal(model, 'foo', true).should.be.a.String;;
   });
 
   it('should not validate when an integer is provided', function() {
     ['positive', 'negative'].forEach(function(property) {
       decimal(model, property, true).should.not.be.true;
-      decimal(model, property, true).should.be.a('string');
+      decimal(model, property, true).should.be.a.String;;
     });
   });
 

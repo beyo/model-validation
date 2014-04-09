@@ -50,8 +50,8 @@ describe('Test number utilities', function() {
       [
         -123.456, -1.345, -0.123, 0.0, 0.123, 1.234, 123.456
       ].forEach(function(floatVal) {
-        number.getDecimal(floatVal).should.be.a('number').and.be.equal(floatVal);
-        number.getDecimal(String(floatVal)).should.be.a('number').and.be.equal(floatVal);
+        number.getDecimal(floatVal).should.be.a.Number.and.be.equal(floatVal);
+        number.getDecimal(String(floatVal)).should.be.a.Number.and.be.equal(floatVal);
       });
 
       for (var i=123.01; i<124; i+=0.02) {
@@ -80,8 +80,8 @@ describe('Test number utilities', function() {
       [
         -123, -1, 0, 1, 123
       ].forEach(function(intVal) {
-        number.getInteger(intVal).should.be.a('number').and.be.equal(intVal);
-        number.getInteger(String(intVal)).should.be.a('number').and.be.equal(intVal);
+        number.getInteger(intVal).should.be.a.Number.and.be.equal(intVal);
+        number.getInteger(String(intVal)).should.be.a.Number.and.be.equal(intVal);
       });
     });
 

@@ -1,56 +1,74 @@
 
+var Model = require('beyo-model').Model;
+
 var blacklist = require('../../lib/validators/blacklist');
 
 describe('Test `blacklist` validator', function() {
-  var model = {
-    __data: {
-      prop: "a",
-      propUpper: "A",
-      propInvalid: 1
-    }
-  };
+  var TestModel;
+  var model;
+
   var customMessage = "Testing blacklist successful!";
   var options;
 
-  beforeEach(function() {
+  var translator = function * (msg) { return msg; };
+  var noop = function * () {};
+
+  before(function () {
+    TestModel = Model.define('BlackListTestModel', {
+      attributes: {
+        prop:        { type: 'string' },
+        propUpper:   { type: 'string' },
+        propInvalid: { type: 'string' }
+      }
+    });
+  });
+
+  beforeEach(function () {
     options = {
        values: ["a", true, null]
     };
+
+    model = TestModel({
+      prop: "a",
+      propUpper: "A",
+      propInvalid: 1
+    });
   });
 
-  it('should ignore if no values defined', function() {
-    blacklist(model, 'prop').should.be.true;
-    blacklist(model, 'prop', null).should.be.true;
-    blacklist(model, 'prop', {}).should.be.true;
-    blacklist(model, 'prop', []).should.be.true;
+  it('should ignore if no values defined', function * () {
+    assert.equal(yield blacklist(model, 'prop', undefined, translator, noop), undefined);
+    assert.equal(yield blacklist(model, 'prop', null, translator, noop), undefined);
+    assert.equal(yield blacklist(model, 'prop', {}, translator, noop), undefined);
+    assert.equal(yield blacklist(model, 'prop', [], translator, noop), undefined);
 
     options.values = [];
-    blacklist(model, 'prop', options).should.be.true;
+    assert.equal(yield blacklist(model, 'prop', options, translator, noop), undefined);
 
     delete options.values;
-    blacklist(model, 'prop', options).should.be.true;
+    assert.equal(yield blacklist(model, 'prop', options, translator, noop), undefined);
   });
 
-  it('should validate', function() {
-    blacklist(model, 'propUpper', options).should.be.true;
-    blacklist(model, 'propInvalid', options).should.be.true;
+  it('should validate', function * () {
+    assert.equal(yield blacklist(model, 'propUpper', options, translator, noop), undefined);
+    assert.equal(yield blacklist(model, 'propInvalid', options, translator, noop), undefined);
   });
 
-  it('should not validate', function() {
-    blacklist(model, 'prop', options).should.be.a('string');
-    blacklist(model, 'prop', options.values).should.a('string');
+  it('should not validate', function * () {
+    (yield blacklist(model, 'prop', options, translator, noop)).should.be.a.String;
+
+    (yield blacklist(model, 'prop', options.values, translator, noop)).should.be.a.String;
 
     options.ignoreCase = true;
-    blacklist(model, 'propUpper', options).should.a('string');
+    (yield blacklist(model, 'propUpper', options, translator, noop)).should.be.a.String;
 
     options.strictCompare = false;
-    blacklist(model, 'propInvalid', options).should.a('string');
+    (yield blacklist(model, 'propInvalid', options, translator, noop)).should.be.a.String;
   });
 
-  it('should allow changing the error message', function() {
+  it('should allow changing the error message', function * () {
     options.message = customMessage;
 
-    blacklist(model, 'prop', options).should.equal(customMessage);
+    (yield blacklist(model, 'prop', options, translator, noop)).should.equal(customMessage);
   });
 
 });

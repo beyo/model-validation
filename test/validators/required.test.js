@@ -26,7 +26,7 @@ describe('Test `required` validator', function() {
 
   it('should not validate', function() {
     required(model, 'bar', true).should.not.be.true;
-    required(model, 'bar', true).should.be.a('string');
+    required(model, 'bar', true).should.be.a.String;;
 
     required(model, 'bar', {}).should.not.be.true;
     required(model, 'bar', undefined).should.not.be.true;

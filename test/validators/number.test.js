@@ -68,13 +68,13 @@ describe('Test `number` validator', function() {
   it('should not validate', function() {
     ['positive', 'negative', 'zero'].forEach(function(property) {
       number(model, property, false).should.not.be.true;
-      number(model, property, false).should.be.a('string');
+      number(model, property, false).should.be.a.String;;
     });
 
     number(model, 'foo').should.not.be.true;
-    number(model, 'foo').should.be.a('string');
+    number(model, 'foo').should.be.a.String;;
     number(model, 'foo', true).should.not.be.true;
-    number(model, 'foo', true).should.be.a('string');
+    number(model, 'foo', true).should.be.a.String;;
   });
 
   it('should allow changing the error message', function() {

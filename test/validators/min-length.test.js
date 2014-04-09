@@ -16,7 +16,7 @@ describe('Test `min-length` validator', function() {
 
   it('should not validate', function() {
     minLength(model, 'firstName').should.not.be.true;
-    minLength(model, 'firstName').should.be.a('string');
+    minLength(model, 'firstName').should.be.a.String;;
   });
 
   it('should allow changing the error message', function() {

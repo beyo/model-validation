@@ -76,15 +76,15 @@ describe('Test `integer` validator', function() {
 
   it('should not validate', function() {
     integer(model, 'foo').should.not.be.true;
-    integer(model, 'foo').should.be.a('string');
+    integer(model, 'foo').should.be.a.String;;
     integer(model, 'foo', true).should.not.be.true;
-    integer(model, 'foo', true).should.be.a('string');
+    integer(model, 'foo', true).should.be.a.String;;
   });
 
   it('should not validate when a float is provided', function() {
     ['floatPositive', 'floatNegative', 'floatZero'].forEach(function(property) {
       integer(model, property, true).should.not.be.true;
-      integer(model, property, true).should.be.a('string');
+      integer(model, property, true).should.be.a.String;;
     });
   });
 
