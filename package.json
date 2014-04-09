@@ -1,0 +1,36 @@
+{
+  "name": "beyo-model-validation",
+  "version": "0.0.0",
+  "description": "Data validation for beyo models",
+  "author": "Yanick Rochon <yanick.rochon@gmail.com>",
+  "main": "index.js",
+  "keywords": [
+    "beyo",
+    "model",
+    "validation",
+    "validator",
+    "validate"
+  ],
+  "homepage": "https://github.com/beyo/model-validation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beyo/model-validation"
+  },
+  "bugs": {
+    "url": "https://github.com/beyo/model-validation/issues"
+  },
+  "scripts": {
+    "test": "mocha --harmony"
+  },
+  "dependencies": {
+    "beyo-model": "latest",
+    "error-factory": "0.0.4"
+  },
+  "devDependencies": {
+    "semicov": "^0.1.1-2",
+    "should": "^3.3.0",
+    "mocha": "^1.18.2",
+    "co-mocha": "0.0.2"
+  },
+  "license": "MIT"
+}
