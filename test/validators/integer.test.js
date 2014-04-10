@@ -106,6 +106,10 @@ describe('Test `integer` validator', function() {
   });
 
   it('should not validate', function * () {
+    (yield integer(model, 'positive', false, translator, noop)).should.be.a.String;;
+    (yield integer(model, 'negative', false, translator, noop)).should.be.a.String;;
+    (yield integer(model, 'zero', false, translator, noop)).should.be.a.String;;
+
     (yield integer(model, 'foo', undefined, translator, noop)).should.be.a.String;
     (yield integer(model, 'foo', true, translator, noop)).should.be.a.String;
   });

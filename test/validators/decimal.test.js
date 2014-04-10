@@ -57,11 +57,10 @@ describe('Test `decimal` validator', function () {
     assert.equal(yield decimal(model, 'floatZero', undefined, translator, noop), undefined);
     assert.equal(yield decimal(model, 'zero', undefined, translator, noop), undefined);
 
-    Object.keys(model._data).forEach(function(propertyName) {
-      stack.push((function * () { return yield decimal(model, propertyName, false, translator, noop); })());
-    });
-
-    while (stack.length) assert.equal(yield stack.pop(), undefined);
+    //Object.keys(model._data).forEach(function(propertyName) {
+    //  stack.push((function * () { return yield decimal(model, propertyName, false, translator, noop); })());
+    //});
+    //while (stack.length) assert.equal(yield stack.pop(), undefined);
   });
 
   it('should validate only positive', function * () {
@@ -111,6 +110,10 @@ describe('Test `decimal` validator', function () {
   });
 
   it('should not validate', function * () {
+    (yield decimal(model, 'floatPositive', false, translator, noop)).should.be.a.String;;
+    (yield decimal(model, 'floatNegative', false, translator, noop)).should.be.a.String;;
+    (yield decimal(model, 'floatZero', false, translator, noop)).should.be.a.String;;
+
     (yield decimal(model, 'foo', undefined, translator, noop)).should.be.a.String;
     (yield decimal(model, 'foo', true, translator, noop)).should.be.a.String;
   });
@@ -121,7 +124,7 @@ describe('Test `decimal` validator', function () {
   });
 
   it('should allow changing the error message', function * () {
-    (yield decimal(model, 'foo', { message: customMessage })).should.equal(customMessage);
+    (yield decimal(model, 'foo', { message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
 });

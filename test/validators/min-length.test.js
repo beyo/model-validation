@@ -1,36 +1,53 @@
 
+var Model = require('beyo-model').Model;
+
 var minLength = require('../../lib/validators/min-length');
 
 describe('Test `min-length` validator', function() {
-  var model = {
-    __data: {
-      firstName: "Jo",
-      lastName: "Johnson"
-    }
-  };
+  var TestModel;
+  var model;
+
   var customMessage = "Testing min-length successful!";
 
-  it('should validate', function() {
-    minLength(model, 'lastName').should.be.true;
+  var translator = function * (msg) { return msg; };
+  var noop = function * () {};
+
+  before(function () {
+    TestModel = Model.define('MinLengthTestModel', {
+      attributes: {
+        firstName: { type: 'string' },
+        lastName:  { type: 'string' }
+      }
+    });
   });
 
-  it('should not validate', function() {
-    minLength(model, 'firstName').should.not.be.true;
-    minLength(model, 'firstName').should.be.a.String;;
+  beforeEach(function () {
+    model = TestModel({
+      firstName: "Jo",
+      lastName: "Johnson"
+    });
   });
 
-  it('should allow changing the error message', function() {
-    minLength(model, 'firstName', { message: customMessage }).should.equal(customMessage);
+  it('should validate', function * () {
+    assert.equal(yield minLength(model, 'lastName', undefined, translator, noop), undefined);
   });
 
-  it('should allow setting adjusting new min', function() {
-    minLength(model, 'firstName', { min: 2 }).should.be.true;
-    minLength(model, 'lastName', { min: 8 }).should.not.be.true;
+  it('should not validate', function * () {
+    (yield minLength(model, 'firstName', undefined, translator, noop)).should.be.a.String;;
   });
 
-  it('should accept options to be the min length value', function() {
-    minLength(model, 'firstName', 2).should.be.true;
-    minLength(model, 'lastName', 8).should.not.be.true;
+  it('should allow changing the error message', function * () {
+    (yield minLength(model, 'firstName', { message: customMessage }, translator, noop)).should.equal(customMessage);
+  });
+
+  it('should allow setting adjusting new min', function * () {
+    assert.equal(yield minLength(model, 'firstName', { min: 2 }, translator, noop), undefined);
+    (yield minLength(model, 'lastName', { min: 8 }, translator, noop)).should.not.be.true;
+  });
+
+  it('should accept options to be the min length value', function * () {
+    assert.equal(yield minLength(model, 'firstName', 2, translator, noop), undefined);
+    (yield minLength(model, 'lastName', 8, translator, noop)).should.not.be.true;
   });
 
 });

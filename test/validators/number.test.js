@@ -1,84 +1,105 @@
 
+var Model = require('beyo-model').Model;
+
 var number = require('../../lib/validators/number');
 
 describe('Test `number` validator', function() {
-  var model = {
-    __data: {
+  var TestModel;
+  var model;
+
+  var customMessage = "Testing number successful!";
+
+  var translator = function * (msg) { return msg; };
+  var noop = function * () {};
+
+  before(function () {
+    TestModel = Model.define('NumberTestModel', {
+      attributes: {
+        positive: { type: 'float' },
+        negative: { type: 'float' },
+        zero:     { type: 'float' },
+        foo:      { type: 'text' }
+      }
+    });
+  });
+
+  beforeEach(function () {
+    model = TestModel({
       positive: 123.456,
       negative: -123.456,
       zero: 0,
       foo: "bar"
-    }
-  };
-  var customMessage = "Testing number successful!";
-
-  it('should validate', function() {
-    [true, undefined, {}].forEach(function(options) {
-      number(model, 'positive', options).should.be.true;
-      number(model, 'negative', options).should.be.true;
-      number(model, 'zero', options).should.be.true;
     });
-
-    number(model, 'positive').should.be.true;
-    number(model, 'negative').should.be.true;
-    number(model, 'zero').should.be.true;
   });
 
-  it('should validate only positive', function() {
+  it('should validate', function * () {
+    var stack = [];
+
+    [true, undefined, {}].forEach(function(options) {
+      stack.push((function * () { yield number(model, 'positive', options, translator, noop); })());
+      stack.push((function * () { yield number(model, 'negative', options, translator, noop); })());
+      stack.push((function * () { yield number(model, 'zero', options, translator, noop); })());
+    });
+
+    while (stack.length) assert.equal(yield stack.pop(), undefined);
+
+    assert.equal(yield number(model, 'positive', undefined, translator, noop), undefined);
+    assert.equal(yield number(model, 'negative', undefined, translator, noop), undefined);
+    assert.equal(yield number(model, 'zero', undefined, translator, noop), undefined);
+  });
+
+  it('should validate only positive', function * () {
     var positiveOptions = {
       positive: true,
       negative: false,
       zero: false
     };
 
-    number(model, 'positive', positiveOptions).should.be.true;
-    number(model, 'negative', positiveOptions).should.not.be.true;
-    number(model, 'zero', positiveOptions).should.not.be.true;
+    assert.equal(yield number(model, 'positive', positiveOptions, translator, noop), undefined);
+    (yield number(model, 'negative', positiveOptions, translator, noop)).should.be.a.String;
+    (yield number(model, 'zero', positiveOptions, translator, noop)).should.be.a.String;
   });
 
-  it('should validate only negative', function() {
+  it('should validate only negative', function * () {
     var negativeOptions = {
       positive: false,
       negative: true,
       zero: false
     };
 
-    number(model, 'positive', negativeOptions).should.not.be.true;
-    number(model, 'negative', negativeOptions).should.be.true;
-    number(model, 'zero', negativeOptions).should.not.be.true;
+    (yield number(model, 'positive', negativeOptions, translator, noop)).should.be.a.String;
+    assert.equal(yield number(model, 'negative', negativeOptions, translator, noop), undefined);
+    (yield number(model, 'zero', negativeOptions, translator, noop)).should.be.a.String;
   });
 
-  it('should validate only zero', function() {
+  it('should validate only zero', function * () {
     var zeroOptions = {
       positive: false,
       negative: false,
       zero: true
     };
 
-    number(model, 'positive', zeroOptions).should.not.be.true;
-    number(model, 'negative', zeroOptions).should.not.be.true;
-    number(model, 'zero', zeroOptions).should.be.true;
+    (yield number(model, 'positive', zeroOptions, translator, noop)).should.be.a.String;
+    (yield number(model, 'negative', zeroOptions, translator, noop)).should.be.a.String;
+    assert.equal(yield number(model, 'zero', zeroOptions, translator, noop), undefined);
   });
 
-  it('should validate "not a number"', function() {
-    number(model, 'foo', false).should.be.true;
-    number(model, 'foo', { positive: false, negative: false, zero: false }).should.be.true;
+  it('should validate "not a number"', function * () {
+    assert.equal(yield number(model, 'foo', false, translator, noop), undefined);
+    assert.equal(yield number(model, 'foo', { positive: false, negative: false, zero: false }, translator, noop), undefined);
   });
 
-  it('should not validate', function() {
-    ['positive', 'negative', 'zero'].forEach(function(property) {
-      number(model, property, false).should.not.be.true;
-      number(model, property, false).should.be.a.String;;
-    });
+  it('should not validate', function * () {
+    (yield number(model, 'positive', false, translator, noop)).should.be.a.String;;
+    (yield number(model, 'negative', false, translator, noop)).should.be.a.String;;
+    (yield number(model, 'zero', false, translator, noop)).should.be.a.String;;
 
-    number(model, 'foo').should.not.be.true;
-    number(model, 'foo').should.be.a.String;;
-    number(model, 'foo', true).should.not.be.true;
-    number(model, 'foo', true).should.be.a.String;;
+    (yield number(model, 'foo', undefined, translator, noop)).should.be.a.String;
+    (yield number(model, 'foo', true, translator, noop)).should.be.a.String;
   });
 
-  it('should allow changing the error message', function() {
-    number(model, 'foo', { message: customMessage }).should.equal(customMessage);
+  it('should allow changing the error message', function * () {
+    (yield number(model, 'foo', { message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
 });
