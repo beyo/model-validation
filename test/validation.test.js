@@ -162,7 +162,7 @@ describe('Test Validation', function () {
 
       validationError.should.be.an.Error
         .and.have.property('message')
-          .and.be.equal('Unknown validator `{{validator}}`');
+          .and.be.equal('Unknown validator `testZ`');
     });
 
     it('should fail with invalid model', function * () {
@@ -176,7 +176,7 @@ describe('Test Validation', function () {
 
       error.should.be.an.Error
         .and.have.property('message')
-          .and.be.equal('Invalid model type `{{model}}`');
+          .and.be.equal('Invalid model type `foo`');
     });
 
   });
