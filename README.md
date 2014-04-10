@@ -22,11 +22,15 @@ Just require `beyo-model-validation` before defining a new model. Requiring this
 module is only needed once; not required when defining subsequent models.
 
 ```javascript
-var Validation = require('beyo-model-validation');
+var Validation = require('beyo-model-validation').Validation;
+var optionsUtils = require('beyo-model-validation').utils.options;
 var Model = require('beyo-model');
 
-Validation.define('passwordStrength', function * (value, options, next) {
-  if (/* value is valid ? */) {
+Validation.define('passwordStrength', function * (model, propertyName, options, translator, next) {
+  var allowSpecial = optionsUtil.getBoolean(options, 'allowSpecial', true);
+  var allowWhitespace = optionsUtil.getBoolean(options, 'allowWhitespace', false);
+
+  if (/* model._data[propertyName] is valid ? */) {
     return yield next;
   } else {
     return 'Password strength failed';
@@ -76,6 +80,9 @@ console.log(yield foo.validate());
 
 **NOTE**: the order of the declared validation chain is important; validators
 will be executed in the same order.
+
+**NOTE**: `model.validate()` returns `false` if all validation passes. This is to
+facilitate checks like `var errors = model.validate(); if (errors) { ... }`.
 
 
 ## Available validators
