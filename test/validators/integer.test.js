@@ -1,9 +1,33 @@
 
+var Model = require('beyo-model').Model;
+
 var integer = require('../../lib/validators/integer');
 
 describe('Test `integer` validator', function() {
-  var model = {
-    __data: {
+  var TestModel;
+  var model;
+
+  var customMessage = "Testing integer successful!";
+
+  var translator = function * (msg) { return msg; };
+  var noop = function * () {};
+
+  before(function () {
+    TestModel = Model.define('IntegerTestModel', {
+      attributes: {
+        positive:      { type: 'int' },
+        negative:      { type: 'int' },
+        zero:          { type: 'int' },
+        floatPositive: { type: 'float' },
+        floatNegative: { type: 'float' },
+        floatZero:     { type: 'float' },
+        foo:           { type: 'text' }
+      }
+    });
+  });
+
+  beforeEach(function () {
+    model = TestModel({
       positive: 123,
       negative: -123,
       zero: 0,
@@ -11,85 +35,92 @@ describe('Test `integer` validator', function() {
       floatNegative: -123.456,
       floatZero: '0.0',
       foo: "bar"
-    }
-  };
-  var customMessage = "Testing integer successful!";
-
-  it('should validate', function() {
-    [true, undefined, {}].forEach(function(options) {
-      integer(model, 'positive', options).should.be.true;
-      integer(model, 'negative', options).should.be.true;
-      integer(model, 'zero', options).should.be.true;
-    });
-
-    integer(model, 'positive').should.be.true;
-    integer(model, 'negative').should.be.true;
-    integer(model, 'zero').should.be.true;
-
-    Object.keys(model.__data).forEach(function(propertyName) {
-      integer(model, propertyName, false).should.be.true;
     });
   });
 
-  it('should validate only positive', function() {
+  it('should validate', function * () {
+    var stack = [];
+
+    [
+      undefined, true, {}
+    ].forEach(function (options) {
+      stack.push((function * () { yield integer(model, 'positive', options, translator, noop); })());
+      stack.push((function * () { yield integer(model, 'negative', options, translator, noop); })());
+      stack.push((function * () { yield integer(model, 'zero', options, translator, noop); })());
+    });
+
+    while (stack.length) assert.equal(yield stack.pop(), undefined);
+
+    assert.equal(yield integer(model, 'positive', undefined, translator, noop), undefined);
+    assert.equal(yield integer(model, 'negative', undefined, translator, noop), undefined);
+    assert.equal(yield integer(model, 'zero', undefined, translator, noop), undefined);
+
+    Object.keys(model._data).forEach(function(propertyName) {
+      stack.push((function * () { yield integer(model, propertyName, false, translator, noop); })());
+    });
+
+    while (stack.length) assert.equal(yield stack.pop(), undefined);
+  });
+
+  it('should validate only positive', function * () {
     var positiveOptions = {
       positive: true,
       negative: false,
       zero: false
     };
 
-    integer(model, 'positive', positiveOptions).should.be.true;
-    integer(model, 'negative', positiveOptions).should.not.be.true;
-    integer(model, 'zero', positiveOptions).should.not.be.true;
+    assert.equal(yield integer(model, 'positive', positiveOptions, translator, noop), undefined);
+    (yield integer(model, 'negative', positiveOptions, translator, noop)).should.be.a.String;
+    (yield integer(model, 'zero', positiveOptions, translator, noop)).should.be.a.String;
   });
 
-  it('should validate only negative', function() {
+  it('should validate only negative', function * () {
     var negativeOptions = {
       positive: false,
       negative: true,
       zero: false
     };
 
-    integer(model, 'positive', negativeOptions).should.not.be.true;
-    integer(model, 'negative', negativeOptions).should.be.true;
-    integer(model, 'zero', negativeOptions).should.not.be.true;
+    (yield integer(model, 'positive', negativeOptions, translator, noop)).should.be.a.String;
+    assert.equal(yield integer(model, 'negative', negativeOptions, translator, noop), undefined);
+    (yield integer(model, 'zero', negativeOptions, translator, noop)).should.be.a.String;
   });
 
-  it('should validate only zero', function() {
+  it('should validate only zero', function * () {
     var zeroOptions = {
       positive: false,
       negative: false,
       zero: true
     };
 
-    integer(model, 'positive', zeroOptions).should.not.be.true;
-    integer(model, 'negative', zeroOptions).should.not.be.true;
-    integer(model, 'zero', zeroOptions).should.be.true;
+    (yield integer(model, 'positive', zeroOptions, translator, noop)).should.be.a.String;
+    (yield integer(model, 'negative', zeroOptions, translator, noop)).should.be.a.String;
+    assert.equal(yield integer(model, 'zero', zeroOptions, translator, noop), undefined);
   });
 
-  it('should validate "not a number"', function() {
-    integer(model, 'foo', false).should.be.true;
-    integer(model, 'foo', { positive: false, negative: false, zero: false }).should.be.true;
+  it('should validate "not a number"', function * () {
+    assert.equal(yield integer(model, 'foo', false, translator, noop), undefined);
+    assert.equal(yield integer(model, 'foo', { positive: false, negative: false, zero: false }, translator, noop), undefined);
 
-    integer(model, 'foo').should.not.be.true;
+    (yield integer(model, 'foo', undefined, translator, noop)).should.be.a.String;
   });
 
-  it('should not validate', function() {
-    integer(model, 'foo').should.not.be.true;
-    integer(model, 'foo').should.be.a.String;;
-    integer(model, 'foo', true).should.not.be.true;
-    integer(model, 'foo', true).should.be.a.String;;
+  it('should not validate', function * () {
+    (yield integer(model, 'foo', undefined, translator, noop)).should.be.a.String;
+    (yield integer(model, 'foo', true, translator, noop)).should.be.a.String;
   });
 
-  it('should not validate when a float is provided', function() {
-    ['floatPositive', 'floatNegative', 'floatZero'].forEach(function(property) {
-      integer(model, property, true).should.not.be.true;
-      integer(model, property, true).should.be.a.String;;
-    });
+  it('should not validate when a float is provided', function * () {
+    (yield integer(model, 'floatPositive', true, translator, noop)).should.be.a.String;
+    (yield integer(model, 'floatNegative', true, translator, noop)).should.be.a.String;
+
+    model._data.floatZero = '0.0';  // NOTE: special case, as parseFloat('0.0') returns 0, which is an integer, and would validate
+
+    (yield integer(model, 'floatZero', true, translator, noop)).should.be.a.String;
   });
 
-  it('should allow changing the error message', function() {
-    integer(model, 'foo', { message: customMessage }).should.equal(customMessage);
+  it('should allow changing the error message', function * () {
+    (yield integer(model, 'foo', { message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
 });

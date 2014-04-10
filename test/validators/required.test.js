@@ -1,40 +1,56 @@
 
+var Model = require('beyo-model').Model;
+
 var required = require('../../lib/validators/required');
 
 describe('Test `required` validator', function() {
-  var model = {
-    __data: {
-      id: 1,
-      foo: "bar"
-    }
-  };
+  var TestModel;
+  var model;
+
   var customMessage = "Testing required successful!";
 
-  it('should validate', function() {
-    required(model, 'id', true).should.be.true;
-    required(model, 'id', {}).should.be.true;
+  var translator = function * (msg) { return msg; };
+  var noop = function * () {};
 
-    required(model, 'bar', false).should.be.true;  // not required
+  before(function () {
+    TestModel = Model.define('RequiredTestModel', {
+      attributes: {
+        id:  { type: 'int' },
+        foo: { type: 'text' }
+      }
+    });
   });
 
-  it('should ignore "optional" requirements', function() {
-    required(model, 'id').should.be.true;
-    required(model, 'id', false).should.be.true;     // not required, aka optional
-    required(model, 'id', undefined).should.be.true;
-    required(model, 'id', null).should.be.true;
+  beforeEach(function () {
+    model = TestModel({
+      id: 1,
+      foo: "bar"
+    });
   });
 
-  it('should not validate', function() {
-    required(model, 'bar', true).should.not.be.true;
-    required(model, 'bar', true).should.be.a.String;;
+  it('should validate', function * () {
+    assert.equal(yield required(model, 'id', true, translator, noop), undefined);
+    assert.equal(yield required(model, 'id', {}, translator, noop), undefined);
 
-    required(model, 'bar', {}).should.not.be.true;
-    required(model, 'bar', undefined).should.not.be.true;
-    required(model, 'bar', null).should.not.be.true;
+    assert.equal(yield required(model, 'bar', false, translator, noop), undefined);  // not required
   });
 
-  it('should allow changing the error message', function() {
-    required(model, 'bar', { message: customMessage }).should.equal(customMessage);
+  it('should ignore "optional" requirements', function * () {
+    assert.equal(yield required(model, 'id', false, translator, noop), undefined);     // not required, aka optional
+    assert.equal(yield required(model, 'id', undefined, translator, noop), undefined);
+    assert.equal(yield required(model, 'id', null, translator, noop), undefined);
+  });
+
+  it('should not validate', function * () {
+    (yield required(model, 'bar', true, translator, noop)).should.be.a.String;
+
+    (yield required(model, 'bar', {}, translator, noop)).should.be.a.String;
+    (yield required(model, 'bar', undefined, translator, noop)).should.be.a.String;
+    (yield required(model, 'bar', null, translator, noop)).should.be.a.String;
+  });
+
+  it('should allow changing the error message', function * () {
+    (yield required(model, 'bar', { message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
 });

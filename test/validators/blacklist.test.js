@@ -18,7 +18,7 @@ describe('Test `blacklist` validator', function() {
       attributes: {
         prop:        { type: 'string' },
         propUpper:   { type: 'string' },
-        propInvalid: { type: 'string' }
+        propInvalid: { type: 'integer' }
       }
     });
   });

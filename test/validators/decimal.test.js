@@ -1,12 +1,13 @@
 
+var Model = require('beyo-model').Model;
+
 var decimal = require('../../lib/validators/decimal');
 
-describe('Test `decimal` validator', function() {
+describe('Test `decimal` validator', function () {
   var TestModel;
   var model;
 
   var customMessage = "Testing decimal successful!";
-  var options;
 
   var translator = function * (msg) { return msg; };
   var noop = function * () {};
@@ -26,10 +27,6 @@ describe('Test `decimal` validator', function() {
   });
 
   beforeEach(function () {
-    options = {
-       values: ["a", true, null]
-    };
-
     model = TestModel({
       positive: 123,
       negative: -123,
@@ -41,87 +38,90 @@ describe('Test `decimal` validator', function() {
     });
   });
 
+  it('should validate', function * () {
+    var stack = [];
 
-  it('should validate', function() {
-    [true, undefined, {}].forEach(function(options) {
-      decimal(model, 'floatPositive', options).should.be.true;
-      decimal(model, 'floatNegative', options).should.be.true;
-      decimal(model, 'floatZero', options).should.be.true;
-      decimal(model, 'zero', options).should.be.true;
+    [
+      undefined, true, {}
+    ].forEach(function (options) {
+      stack.push((function * () { return yield decimal(model, 'floatPositive', options, translator, noop); })());
+      stack.push((function * () { return yield decimal(model, 'floatNegative', options, translator, noop); })());
+      stack.push((function * () { return yield decimal(model, 'floatZero', options, translator, noop); })());
+      stack.push((function * () { return yield decimal(model, 'zero', options, translator, noop); })());
     });
 
-    decimal(model, 'floatPositive').should.be.true;
-    decimal(model, 'floatNegative').should.be.true;
-    decimal(model, 'floatZero').should.be.true;
-    decimal(model, 'zero').should.be.true;
+    while (stack.length) assert.equal(yield stack.pop(), undefined);
 
-    Object.keys(model.__data).forEach(function(propertyName) {
-      decimal(model, propertyName, false).should.be.true;
+    assert.equal(yield decimal(model, 'floatPositive', undefined, translator, noop), undefined);
+    assert.equal(yield decimal(model, 'floatNegative', undefined, translator, noop), undefined);
+    assert.equal(yield decimal(model, 'floatZero', undefined, translator, noop), undefined);
+    assert.equal(yield decimal(model, 'zero', undefined, translator, noop), undefined);
+
+    Object.keys(model._data).forEach(function(propertyName) {
+      stack.push((function * () { return yield decimal(model, propertyName, false, translator, noop); })());
     });
+
+    while (stack.length) assert.equal(yield stack.pop(), undefined);
   });
 
-  it('should validate only positive', function() {
+  it('should validate only positive', function * () {
     var positiveOptions = {
       positive: true,
       negative: false,
       zero: false
     };
 
-    decimal(model, 'floatPositive', positiveOptions).should.be.true;
-    decimal(model, 'floatNegative', positiveOptions).should.not.be.true;
-    decimal(model, 'floatZero', positiveOptions).should.not.be.true;
-    decimal(model, 'zero', positiveOptions).should.not.be.true;
+    assert.equal(yield decimal(model, 'floatPositive', positiveOptions, translator, noop), undefined);
+    (yield decimal(model, 'floatNegative', positiveOptions, translator, noop)).should.be.a.String;
+    (yield decimal(model, 'floatZero', positiveOptions, translator, noop)).should.be.a.String;
+    (yield decimal(model, 'zero', positiveOptions, translator, noop)).should.be.a.String;
   });
 
-  it('should validate only negative', function() {
+  it('should validate only negative', function * () {
     var negativeOptions = {
       positive: false,
       negative: true,
       zero: false
     };
 
-    decimal(model, 'floatPositive', negativeOptions).should.not.be.true;
-    decimal(model, 'floatNegative', negativeOptions).should.be.true;
-    decimal(model, 'floatZero', negativeOptions).should.not.be.true;
-    decimal(model, 'zero', negativeOptions).should.not.be.true;
+    (yield decimal(model, 'floatPositive', negativeOptions, translator, noop)).should.be.a.String;
+    assert.equal(yield decimal(model, 'floatNegative', negativeOptions, translator, noop), undefined);
+    (yield decimal(model, 'floatZero', negativeOptions, translator, noop)).should.be.a.String;
+    (yield decimal(model, 'zero', negativeOptions, translator, noop)).should.be.a.String;
   });
 
-  it('should validate only zero', function() {
+  it('should validate only zero', function * () {
     var zeroOptions = {
       positive: false,
       negative: false,
       zero: true
     };
 
-    decimal(model, 'floatPositive', zeroOptions).should.not.be.true;
-    decimal(model, 'floatNegative', zeroOptions).should.not.be.true;
-    decimal(model, 'floatZero', zeroOptions).should.be.true;
-    decimal(model, 'zero', zeroOptions).should.be.true;
+    (yield decimal(model, 'floatPositive', zeroOptions, translator, noop)).should.be.a.String;
+    (yield decimal(model, 'floatNegative', zeroOptions, translator, noop)).should.be.a.String;
+    assert.equal(yield decimal(model, 'floatZero', zeroOptions, translator, noop), undefined);
+    assert.equal(yield decimal(model, 'zero', zeroOptions, translator, noop), undefined);
   });
 
-  it('should validate "not a number"', function() {
-    decimal(model, 'foo', false).should.be.true;
-    decimal(model, 'foo', { positive: false, negative: false, zero: false }).should.be.true;
+  it('should validate "not a number"', function * () {
+    assert.equal(yield decimal(model, 'foo', false, translator, noop), undefined);
+    assert.equal(yield decimal(model, 'foo', { positive: false, negative: false, zero: false }, translator, noop), undefined);
 
-    decimal(model, 'foo').should.not.be.true;
+    (yield decimal(model, 'foo', undefined, translator, noop)).should.be.a.String;
   });
 
-  it('should not validate', function() {
-    decimal(model, 'foo').should.not.be.true;
-    decimal(model, 'foo').should.be.a.String;;
-    decimal(model, 'foo', true).should.not.be.true;
-    decimal(model, 'foo', true).should.be.a.String;;
+  it('should not validate', function * () {
+    (yield decimal(model, 'foo', undefined, translator, noop)).should.be.a.String;
+    (yield decimal(model, 'foo', true, translator, noop)).should.be.a.String;
   });
 
-  it('should not validate when an integer is provided', function() {
-    ['positive', 'negative'].forEach(function(property) {
-      decimal(model, property, true).should.not.be.true;
-      decimal(model, property, true).should.be.a.String;;
-    });
+  it('should not validate when an integer is provided', function * () {
+    (yield decimal(model, 'positive', true, translator, noop)).should.be.a.String;
+    (yield decimal(model, 'negative', true, translator, noop)).should.be.a.String;
   });
 
-  it('should allow changing the error message', function() {
-    decimal(model, 'foo', { message: customMessage }).should.equal(customMessage);
+  it('should allow changing the error message', function * () {
+    (yield decimal(model, 'foo', { message: customMessage })).should.equal(customMessage);
   });
 
 });

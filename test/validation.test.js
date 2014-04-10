@@ -22,7 +22,6 @@ describe('Test Validation', function () {
           files.forEach(function(file){
             var validator = file.replace('.js', '');
 
-            Validation.get(validator).should.not.be.empty;
             Validation.get(validator).should.be.a.Function;
           });
         }
