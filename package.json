@@ -1,6 +1,6 @@
 {
   "name": "beyo-model-validation",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Data validation for beyo models",
   "author": "Yanick Rochon <yanick.rochon@gmail.com>",
   "main": "index.js",
@@ -32,7 +32,7 @@
     "semicov": "^0.1.1-2",
     "should": "^3.3.1",
     "mocha": "^1.18.2",
-    "co-mocha": "0.0.2"
+    "co-mocha": "0.0.4"
   },
   "license": "MIT"
 }

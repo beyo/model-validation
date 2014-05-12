@@ -31,10 +31,8 @@ describe('Test `unique` validator', function() {
 
 
   before(function () {
-    Model.once('define', function (options) {
-      options.prototype.mapper = {
-        value: dummyMapper()
-      };
+    Model.once('define', function (e) {
+      e.constructor.mapper = e.constructor.prototype._mapper = dummyMapper();
     });
 
     TestModelA = Model.define('UniqueTestAModel', {
@@ -43,10 +41,8 @@ describe('Test `unique` validator', function() {
       }
     });
 
-    Model.once('define', function (options) {
-      options.prototype.mapper = {
-        value: dummyMapper({ knownValues: [ 2 ] })
-      };
+    Model.once('define', function (e) {
+      e.constructor.mapper = e.constructor.prototype._mapper = dummyMapper({ knownValues: [ 2 ] });
     });
 
     TestModelB = Model.define('UniqueTestBModel', {
