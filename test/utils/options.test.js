@@ -254,4 +254,44 @@ describe('Test options utilities', function() {
       });
     });
   });
+
+  describe('where getRegExp', function () {
+    it('should return `options` if a valid RegExp', function () {
+      [
+        '.', '^foo$', /./, /^foo$/i, new RegExp('.', 'g'), new RegExp(/(.)/)
+      ].forEach(function (val) {
+        optUtils.getRegExp(val).should.be.a.RegExp;
+        optUtils.getRegExp(val, 'foo').should.be.a.RegExp;
+        optUtils.getRegExp(val, 'foo', false).should.be.a.RegExp;
+      });
+    });
+
+    it('should return the options\' key if a valid RegExp', function() {
+      [
+        '.', '^foo$', /./, /^foo$/i, new RegExp('.', 'g'), new RegExp(/(.)/)
+      ].forEach(function (val) {
+        optUtils.getRegExp({ foo: val}, 'foo').should.be.a.RegExp;
+        optUtils.getRegExp({ foo: val}, 'foo', false).should.be.a.RegExp;
+      });
+    });
+
+    it('should return the default value if not a valid `options`', function() {
+      [
+        -1, 0, 1, -1.234, 1.234, undefined, null, false, true, [], {}
+      ].forEach(function(val) {
+        assert.strictEqual( optUtils.getRegExp({ foo: val }, 'foo'), undefined );
+        optUtils.getRegExp({ foo: val }, 'foo', false).should.be.false;
+      });
+      assert.strictEqual( optUtils.getRegExp(), undefined );
+    });
+
+    it('should return the default value if the options\' key is not a string', function() {
+      [
+        -1, 0, 1, -1.234, 1.234, undefined, null, false, true, [], {}
+      ].forEach(function(val) {
+        assert.strictEqual( optUtils.getRegExp({ foo: val }, 'foo'), undefined );
+        optUtils.getRegExp({ foo: val }, 'foo', false).should.be.false;
+      });
+    });
+  });
 });

@@ -112,6 +112,7 @@ facilitate checks like `var errors = model.validate(); if (errors) { ... }`.
 * **isbn** : *(TODO)* the field's value must be a valid ISBN.
 * **len** : *(TODO)* the array-type field's value must contain the given number of elements.
 * **lowercase** : *(TODO)* the field's value must be a lowercased string.
+* **match** : the field's value must match the given regular expression.
 * **max** : *(TODO)* the field's value must not be greater than the given value.
 * **maxLength** : the string-type field's value must not contain more characters than the given value.
 * **min** : *(TODO)* the field's value must not be less than the given value.
@@ -125,7 +126,7 @@ facilitate checks like `var errors = model.validate(); if (errors) { ... }`.
 * **notRegex** : *(TODO)* the negation of **regex**.
 * **null** : *(TODO)* the field's value must be `null`.
 * **number** : the field's value must be a valid number (may be **integer** or **decimal**).
-* **regex** : *(TODO)* the field's value must be a regular expression string, or `Regex` object.
+* **regexp** : *(TODO)* the field's value must be a regular expression string, or `RegExp` object.
 * **required** : the field is defined with *any* value.
 * **string** : *(TODO)* the field's value must be a string.
 * **truthy** : *(TODO)* the field's value must evaluate to `true` (double equality `==`).
