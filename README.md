@@ -87,24 +87,37 @@ facilitate checks like `var errors = model.validate(); if (errors) { ... }`.
 
 ## Available validators
 
+* **blacklist** : the field's value must *not* be one of the specified disallowed values.
+* **decimal** : the field's value must be decimal (numeric, not **integer**).
+* **integer** : the field's value must be an integer (numeric, not **decimal**).
+* **match** : the field's value must match the given regular expression.
+* **maxLength** : the string-type field's value must not contain more characters than the given value.
+* **minLength** : the string-type field's value must not contain less characters than the given value.
+* **number** : the field's value must be a valid number (may be **integer** or **decimal**).
+* **required** : the field is defined with *any* value.
+* **unique** : the field's value is unique in the dataset. This validation is async and query the database schema.
+* **whitelist** : the field's value must be one of the specified allowed values.
+
+
+### TODO Validators
+
+Any help welcome! See [contribution](#contribution)!
+
 * **after** : *(TODO)* the date-type field's value must be after the given date.
 * **alpha** : *(TODO)* the field's value must contain only alphabetical characters (a-z).
 * **alphanumeric** : *(TODO)* the field's value must contains only alphanumerical characters (a-z0-9).
 * **array** : *(TODO)* the field's value must be an array.
 * **before** : *(TODO)* the date-type field's value must be before the given date.
-* **blacklist** : the field's value must *not* be one of the specified disallowed values.
 * **boolean** : *(TODO)* the field's value must be boolean.
 * **contains** : *(TODO)* the field's value must contain the given string.
 * **creditcard** : *(TODO)* the field's value is a valid credit card number.
 * **date** : *(TODO)* the field's value must be a date.
-* **decimal** : the field's value must be decimal (numeric, not **integer**).
 * **email** : *(TODO)* the field's value must be a valid email address.
 * **empty** : *(TODO)* the field's value msut be empty (i.e. `0`, `""`, `[]`, or `{}`)
 * **equals** : *(TODO)* the field's value must equal the given value (using double equality `==`).
 * **falsey** : *(TODO)* the negation of **truthy**.
 * **hexadecimal** : *(TODO)* the field's value is a valid hexadecimal number.
 * **hexColor** : *(TODO)* the field's value is a valid hexadecimal color.
-* **integer** : the field's value must be an integer (numeric, not **decimal**).
 * **ip** : *(TODO)* the field's value must be a valid IP (may be an integer or a string).
 * **ipv4** : *(TODO)* the field's value must be a valid IPv4 (may be an integer or a string).
 * **ipv6** : *(TODO)* the field's value must be a valid IPv6 (may be an integer or a string).
@@ -112,11 +125,8 @@ facilitate checks like `var errors = model.validate(); if (errors) { ... }`.
 * **isbn** : *(TODO)* the field's value must be a valid ISBN.
 * **len** : *(TODO)* the array-type field's value must contain the given number of elements.
 * **lowercase** : *(TODO)* the field's value must be a lowercased string.
-* **match** : the field's value must match the given regular expression.
 * **max** : *(TODO)* the field's value must not be greater than the given value.
-* **maxLength** : the string-type field's value must not contain more characters than the given value.
 * **min** : *(TODO)* the field's value must not be less than the given value.
-* **minLength** : the string-type field's value must not contain less characters than the given value.
 * **not** : *(TODO)* the negation of **is**.
 * **notContains** : *(TODO)* the negation of **contains**.
 * **notEmpty** : *(TODO)* the negation of **empty**.
@@ -125,19 +135,15 @@ facilitate checks like `var errors = model.validate(); if (errors) { ... }`.
 * **notNull** : *(TODO)* the negation of **null**.
 * **notRegex** : *(TODO)* the negation of **regex**.
 * **null** : *(TODO)* the field's value must be `null`.
-* **number** : the field's value must be a valid number (may be **integer** or **decimal**).
 * **regexp** : *(TODO)* the field's value must be a regular expression string, or `RegExp` object.
-* **required** : the field is defined with *any* value.
 * **string** : *(TODO)* the field's value must be a string.
 * **truthy** : *(TODO)* the field's value must evaluate to `true` (double equality `==`).
 * **undefined** : *(TODO)* the field's value is equal to `undefined`.
-* **unique** : the field's value is unique in the dataset. This validation is async and query the database schema.
 * **uppercase** : *(TODO)* the negation of **lowercase**.
 * **url** : *(TODO)* the field's value is a valid URL.
 * **uuid** : *(TODO)* the field's value is a valid UUID (v3 or v4).
 * **uuidv3** : *(TODO)* the field's value is a valid UUIDv3.
 * **uuidv4** : *(TODO)* the field's value is a valid UUIDv4.
-* **whitelist** : the field's value must be one of the specified allowed values.
 
 
 ## Contribution

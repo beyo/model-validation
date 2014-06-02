@@ -3,6 +3,27 @@ var optUtils = require('../../lib/utils/options');
 var assert = require("assert");
 
 describe('Test options utilities', function() {
+  describe('where isDefined', function () {
+    it('should return `true`', function () {
+      [
+        true, false, '', 'abc', -1, 0, 1, [], function () {}
+      ].forEach(function (val) {
+        optUtils.isDefined(val).should.be.true;
+        optUtils.isDefined({ foo: val }, 'foo').should.be.true;
+      });
+    });
+    it('should return `false`', function () {
+      [
+        undefined, null
+      ].forEach(function (val) {
+        optUtils.isDefined(val).should.be.false;
+        optUtils.isDefined({ foo: val }, 'foo').should.be.false;
+      });
+
+      optUtils.isDefined({}).should.be.false;
+    });
+  });
+
   describe('where getArray', function() {
     it('should return `options` if an array', function() {
       optUtils.getArray([]).should.be.instanceof(Array);

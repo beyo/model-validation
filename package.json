@@ -1,6 +1,6 @@
 {
   "name": "beyo-model-validation",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Data validation for beyo models",
   "author": "Yanick Rochon <yanick.rochon@gmail.com>",
   "main": "index.js",
