@@ -90,6 +90,7 @@ facilitate checks like `var errors = model.validate(); if (errors) { ... }`.
 * **blacklist** : the field's value must *not* be one of the specified disallowed values.
 * **decimal** : the field's value must be decimal (numeric, not **integer**).
 * **integer** : the field's value must be an integer (numeric, not **decimal**).
+* **hasValue** : the field must contain a value (must not be `null` or `undefined`)
 * **match** : the field's value must match the given regular expression.
 * **maxLength** : the string-type field's value must not contain more characters than the given value.
 * **minLength** : the string-type field's value must not contain less characters than the given value.

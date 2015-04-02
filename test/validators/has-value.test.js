@@ -1,5 +1,6 @@
 
 var Model = require('beyo-model').Model;
+var Types = require('beyo-model').Types;
 
 var hasValue = require('../../lib/validators/has-value');
 
@@ -13,9 +14,13 @@ describe('Test `has-value` validator', function() {
   var noop = function * () {};
 
   before(function () {
+    Types.define('hasValueTestType', function (v) {
+      return v;  // always valid
+    });
+
     TestModel = Model.define('HasValueTestModel', {
       attributes: {
-        // foo: ...
+        foo: 'hasValueTestType'
       }
     });
   });
@@ -34,7 +39,7 @@ describe('Test `has-value` validator', function() {
 
   it('should validate not undefined', function * () {
     yield [
-      false, true, void 0, "", 0, null
+      false, true, "", 0, null
     ].map(function (validEmptyValue) {
       return function * () {
         var model = TestModel({ foo: validEmptyValue });
@@ -43,5 +48,58 @@ describe('Test `has-value` validator', function() {
       };
     });
   });
+
+  it('should validate hasValue', function * () {
+    yield [
+      false, true, "", "hello", 0, 123, function () {}, {}, {hello:"world"}, [], [1, 2, 3]
+    ].map(function (value) {
+      return function * () {
+        var model = TestModel({ foo: value });
+
+        assert.equal(yield hasValue(model, 'foo', true, translator, noop), undefined);
+      };
+    });
+
+    yield [
+      void 0, undefined, null
+    ].map(function (value) {
+      return function * () {
+        var model = TestModel({ foo: value });
+
+        assert.notEqual(yield hasValue(model, 'foo', true, translator, noop), undefined);
+      };
+    });
+  });
+
+  it('should validate !hasValue', function * () {
+    yield [
+      false, true, "", "hello", 0, 123, function () {}, {}, {hello:"world"}, [], [1, 2, 3]
+    ].map(function (value) {
+      return function * () {
+        var model = TestModel({ foo: value });
+
+        assert.notEqual(yield hasValue(model, 'foo', { null: true, undefined: true, hasValue: false }, translator, noop), undefined);
+        assert.notEqual(yield hasValue(model, 'foo', false, translator, noop), undefined);
+      };
+    });
+
+    yield [
+      void 0, undefined, null
+    ].map(function (value) {
+      return function * () {
+        var model = TestModel({ foo: value });
+
+        assert.equal(yield hasValue(model, 'foo', { null: true, undefined: true, hasValue: false }, translator, noop), undefined);
+        assert.equal(yield hasValue(model, 'foo', false, translator, noop), undefined);
+      };
+    });
+  });
+
+  it('should allow changing the error message', function * () {
+    var model = TestModel({ foo: null });
+
+    (yield hasValue(model, 'foo', { message: customMessage }, translator, noop)).should.equal(customMessage);
+  });
+
 
 });
