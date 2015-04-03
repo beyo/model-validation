@@ -63,17 +63,17 @@ describe('Test `unique` validator', function() {
   });
 
   it('should validate', function * () {
-    assert.equal(yield unique(modelA[0], 'id', undefined, translator, noop), undefined);
-    assert.equal(yield unique(modelB[0], 'id', undefined, translator, noop), undefined);
-    assert.equal(yield unique(modelB[1], 'id', undefined, translator, noop), undefined);
+    assert.equal(yield unique.call(modelA[0], 'id', undefined, translator, noop), undefined);
+    assert.equal(yield unique.call(modelB[0], 'id', undefined, translator, noop), undefined);
+    assert.equal(yield unique.call(modelB[1], 'id', undefined, translator, noop), undefined);
   });
 
   it('should not validate', function * () {
-    (yield unique(modelB[2], 'id', undefined, translator, noop)).should.be.a.String;
+    (yield unique.call(modelB[2], 'id', undefined, translator, noop)).should.be.a.String;
   });
 
   it('should allow changing the error message', function * () {
-    (yield unique(modelB[2], 'id', { message: customMessage }, translator, noop)).should.equal(customMessage);
+    (yield unique.call(modelB[2], 'id', { message: customMessage }, translator, noop)).should.equal(customMessage);
   })
 
 });

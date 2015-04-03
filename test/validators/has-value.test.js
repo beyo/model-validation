@@ -32,7 +32,7 @@ describe('Test `has-value` validator', function() {
       return function * () {
         var model = TestModel({ foo: validEmptyValue });
 
-        assert.equal(yield hasValue(model, 'foo', { null: false, undefined: true, hasValue: true }, translator, noop), undefined);
+        assert.equal(yield hasValue.call(model, 'foo', { null: false, undefined: true, hasValue: true }, translator, noop), undefined);
       };
     });
   });
@@ -44,7 +44,7 @@ describe('Test `has-value` validator', function() {
       return function * () {
         var model = TestModel({ foo: validEmptyValue });
 
-        assert.equal(yield hasValue(model, 'foo', { null: true, undefined: false, hasValue: true }, translator, noop), undefined);
+        assert.equal(yield hasValue.call(model, 'foo', { null: true, undefined: false, hasValue: true }, translator, noop), undefined);
       };
     });
   });
@@ -56,7 +56,7 @@ describe('Test `has-value` validator', function() {
       return function * () {
         var model = TestModel({ foo: value });
 
-        assert.equal(yield hasValue(model, 'foo', true, translator, noop), undefined);
+        assert.equal(yield hasValue.call(model, 'foo', true, translator, noop), undefined);
       };
     });
 
@@ -66,7 +66,7 @@ describe('Test `has-value` validator', function() {
       return function * () {
         var model = TestModel({ foo: value });
 
-        assert.notEqual(yield hasValue(model, 'foo', true, translator, noop), undefined);
+        assert.notEqual(yield hasValue.call(model, 'foo', true, translator, noop), undefined);
       };
     });
   });
@@ -78,8 +78,8 @@ describe('Test `has-value` validator', function() {
       return function * () {
         var model = TestModel({ foo: value });
 
-        assert.notEqual(yield hasValue(model, 'foo', { null: true, undefined: true, hasValue: false }, translator, noop), undefined);
-        assert.notEqual(yield hasValue(model, 'foo', false, translator, noop), undefined);
+        assert.notEqual(yield hasValue.call(model, 'foo', { null: true, undefined: true, hasValue: false }, translator, noop), undefined);
+        assert.notEqual(yield hasValue.call(model, 'foo', false, translator, noop), undefined);
       };
     });
 
@@ -89,8 +89,8 @@ describe('Test `has-value` validator', function() {
       return function * () {
         var model = TestModel({ foo: value });
 
-        assert.equal(yield hasValue(model, 'foo', { null: true, undefined: true, hasValue: false }, translator, noop), undefined);
-        assert.equal(yield hasValue(model, 'foo', false, translator, noop), undefined);
+        assert.equal(yield hasValue.call(model, 'foo', { null: true, undefined: true, hasValue: false }, translator, noop), undefined);
+        assert.equal(yield hasValue.call(model, 'foo', false, translator, noop), undefined);
       };
     });
   });
@@ -98,7 +98,7 @@ describe('Test `has-value` validator', function() {
   it('should allow changing the error message', function * () {
     var model = TestModel({ foo: null });
 
-    (yield hasValue(model, 'foo', { message: customMessage }, translator, noop)).should.equal(customMessage);
+    (yield hasValue.call(model, 'foo', { message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
 

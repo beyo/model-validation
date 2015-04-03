@@ -35,25 +35,25 @@ describe('Test `max-length` validator', function() {
   });
 
   it('should validate', function * () {
-    assert.equal(yield maxLength(model, 'login', undefined, translator, noop), undefined);
+    assert.equal(yield maxLength.call(model, 'login', undefined, translator, noop), undefined);
   });
 
   it('should not validate', function * () {
-    (yield maxLength(model, 'password', undefined, translator, noop)).should.be.a.String;;
+    (yield maxLength.call(model, 'password', undefined, translator, noop)).should.be.a.String;;
   });
 
   it('should allow changing the error message', function * () {
-    (yield maxLength(model, 'password', { message: customMessage }, translator, noop)).should.equal(customMessage);
+    (yield maxLength.call(model, 'password', { message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
   it('should allow setting adjusting new max', function * () {
-    (yield maxLength(model, 'login', { max: 2 }, translator, noop)).should.not.be.true;
-    assert.equal(yield maxLength(model, 'password', { max: 4000 }, translator, noop), undefined);
+    (yield maxLength.call(model, 'login', { max: 2 }, translator, noop)).should.not.be.true;
+    assert.equal(yield maxLength.call(model, 'password', { max: 4000 }, translator, noop), undefined);
   });
 
   it('should accept options to be the max length value', function * () {
-    (yield maxLength(model, 'login', 2, translator, noop)).should.be.a.String;
-    assert.equal(yield maxLength(model, 'password', 4000, translator, noop), undefined);
+    (yield maxLength.call(model, 'login', 2, translator, noop)).should.be.a.String;
+    assert.equal(yield maxLength.call(model, 'password', 4000, translator, noop), undefined);
   });
 
 });

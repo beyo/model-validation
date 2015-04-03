@@ -29,28 +29,28 @@ describe('Test `required` validator', function() {
   });
 
   it('should validate', function * () {
-    assert.equal(yield required(model, 'id', true, translator, noop), undefined);
-    assert.equal(yield required(model, 'id', {}, translator, noop), undefined);
+    assert.equal(yield required.call(model, 'id', true, translator, noop), undefined);
+    assert.equal(yield required.call(model, 'id', {}, translator, noop), undefined);
 
-    assert.equal(yield required(model, 'bar', false, translator, noop), undefined);  // not required
+    assert.equal(yield required.call(model, 'bar', false, translator, noop), undefined);  // not required
   });
 
   it('should ignore "optional" requirements', function * () {
-    assert.equal(yield required(model, 'id', false, translator, noop), undefined);     // not required, aka optional
-    assert.equal(yield required(model, 'id', undefined, translator, noop), undefined);
-    assert.equal(yield required(model, 'id', null, translator, noop), undefined);
+    assert.equal(yield required.call(model, 'id', false, translator, noop), undefined);     // not required, aka optional
+    assert.equal(yield required.call(model, 'id', undefined, translator, noop), undefined);
+    assert.equal(yield required.call(model, 'id', null, translator, noop), undefined);
   });
 
   it('should not validate', function * () {
-    (yield required(model, 'bar', true, translator, noop)).should.be.a.String;
+    (yield required.call(model, 'bar', true, translator, noop)).should.be.a.String;
 
-    (yield required(model, 'bar', {}, translator, noop)).should.be.a.String;
-    (yield required(model, 'bar', undefined, translator, noop)).should.be.a.String;
-    (yield required(model, 'bar', null, translator, noop)).should.be.a.String;
+    (yield required.call(model, 'bar', {}, translator, noop)).should.be.a.String;
+    (yield required.call(model, 'bar', undefined, translator, noop)).should.be.a.String;
+    (yield required.call(model, 'bar', null, translator, noop)).should.be.a.String;
   });
 
   it('should allow changing the error message', function * () {
-    (yield required(model, 'bar', { message: customMessage }, translator, noop)).should.equal(customMessage);
+    (yield required.call(model, 'bar', { message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
 });

@@ -29,10 +29,10 @@ describe('Test `match` validator', function() {
   });
 
   it('should validate', function * () {
-    assert.equal(yield match(model, 'foo', '.*', translator, noop), undefined);
-    assert.equal(yield match(model, 'foo', /^bar$/, translator, noop), undefined);
+    assert.equal(yield match.call(model, 'foo', '.*', translator, noop), undefined);
+    assert.equal(yield match.call(model, 'foo', /^bar$/, translator, noop), undefined);
 
-    assert.equal(yield match(model, 'phone', new RegExp('^(\\d{3}-){2}\\d{4}'), translator, noop), undefined);  // not match
+    assert.equal(yield match.call(model, 'phone', new RegExp('^(\\d{3}-){2}\\d{4}'), translator, noop), undefined);  // not match
   });
 
   it('should ignore "optional" requirements', function * () {
@@ -41,23 +41,23 @@ describe('Test `match` validator', function() {
     ]
 
     for (var i = 0, ilen = values.length; i < ilen; ++i) {
-      assert.equal(yield match(model, 'foo', values[i], translator, noop), undefined);     // not required, aka optional
-      assert.equal(yield match(model, 'foo', { pattern: values[i] }, translator, noop), undefined);     // not required, aka optional
+      assert.equal(yield match.call(model, 'foo', values[i], translator, noop), undefined);     // not required, aka optional
+      assert.equal(yield match.call(model, 'foo', { pattern: values[i] }, translator, noop), undefined);     // not required, aka optional
     }
   });
 
   it('should not validate', function * () {
-    (yield match(model, 'foo', false, translator, noop)).should.be.a.String;
-    (yield match(model, 'foo', { pattern: false }, translator, noop)).should.be.a.String;
-    (yield match(model, 'foo', /\d+/, translator, noop)).should.be.a.String;
-    (yield match(model, 'foo', { pattern: /\d+/ }, translator, noop)).should.be.a.String;
+    (yield match.call(model, 'foo', false, translator, noop)).should.be.a.String;
+    (yield match.call(model, 'foo', { pattern: false }, translator, noop)).should.be.a.String;
+    (yield match.call(model, 'foo', /\d+/, translator, noop)).should.be.a.String;
+    (yield match.call(model, 'foo', { pattern: /\d+/ }, translator, noop)).should.be.a.String;
 
-    (yield match(model, 'phone', { pattern: false }, translator, noop)).should.be.a.String;
+    (yield match.call(model, 'phone', { pattern: false }, translator, noop)).should.be.a.String;
 
   });
 
   it('should allow changing the error message', function * () {
-    (yield match(model, 'bar', { pattern: false, message: customMessage }, translator, noop)).should.equal(customMessage);
+    (yield match.call(model, 'bar', { pattern: false, message: customMessage }, translator, noop)).should.equal(customMessage);
   });
 
 });

@@ -84,17 +84,21 @@ describe('Test Validation', function () {
     var buffer;
 
     before(function () {
-      Validation.define('testA', function * (model, propertyName, options, translator, next) {
+      Validation.define('testA', function * (propertyName, options, translator) {
         buffer.push('A');
-        yield next;
       });
-      Validation.define('testB', function * (model, propertyName, options, translator, next) {
+      Validation.define('testB', function * (propertyName, options, translator) {
         buffer.push('B');
-        yield next;
       });
-      Validation.define('testC', function * (model, propertyName, options, translator, next) {
+      Validation.define('testC', function * (propertyName, options, translator) {
         buffer.push('C');
-        yield next;
+      });
+
+      Validation.define('testV', function * (propertyName, options, translator) {
+        buffer.push('V');
+        if (!this._data[propertyName]) {
+          return "TestV failed";
+        }
       });
     });
 
@@ -196,6 +200,26 @@ describe('Test Validation', function () {
 
       errors.should.be.false;
       buffer.should.eql(['A']);
+    });
+
+
+    it('should validate model attribute array', function * () {
+      var ModelItemType = Model.define('ValidationArrayItemAttributes', {
+        attributes: {
+          item: { type: 'text', validation: { 'testA': true, 'testV': true } }
+        }
+      })
+
+      var ModelType = Model.define('ValidationArrayAttributes', {
+        attributes: {
+          items: { type: 'ValidationArrayItemAttributes[]' }
+        }
+      });
+
+      var errors = yield ModelType({ items: [ null, undefined, ModelItemType({ item: null }) ] }).validate();
+
+      errors.should.be.eql({ 'items[2]': { 'item': 'TestV failed' } });
+      buffer.should.eql(['A', 'V']);
     });
 
   });
