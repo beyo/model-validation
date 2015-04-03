@@ -81,6 +81,27 @@ describe('Test Validation', function () {
   });
 
   describe('where validating models', function () {
+    var buffer;
+
+    before(function () {
+      Validation.define('testA', function * (model, propertyName, options, translator, next) {
+        buffer.push('A');
+        yield next;
+      });
+      Validation.define('testB', function * (model, propertyName, options, translator, next) {
+        buffer.push('B');
+        yield next;
+      });
+      Validation.define('testC', function * (model, propertyName, options, translator, next) {
+        buffer.push('C');
+        yield next;
+      });
+    });
+
+    beforeEach(function () {
+      buffer = [];
+    });
+
     it('should validate', function * () {
       var ModelType = Model.define('ValidationSuccess', {
         attributes: {
@@ -106,21 +127,6 @@ describe('Test Validation', function () {
     });
 
     it('should chain validators in their respective order', function * () {
-      var buffer = [];
-
-      Validation.define('testA', function * (model, propertyName, options, translator, next) {
-        buffer.push('A');
-        yield next;
-      });
-      Validation.define('testB', function * (model, propertyName, options, translator, next) {
-        buffer.push('B');
-        yield next;
-      });
-      Validation.define('testC', function * (model, propertyName, options, translator, next) {
-        buffer.push('C');
-        yield next;
-      });
-
       var ModelType = Model.define('ValidationChainOrder', {
         attributes: {
           value1: { type: 'text', validation: { 'testA': true, 'testB': true, 'testC': true } },
@@ -148,7 +154,7 @@ describe('Test Validation', function () {
 
       var ModelType = Model.define('ValidationInvalidChain', {
         attributes: {
-          value1: { type: 'text', validation: { 'testA': true, 'testZ': true } },
+          value1: { type: 'text', validation: { 'testA': true, 'testZ': true } }
         }
       });
 
@@ -177,6 +183,19 @@ describe('Test Validation', function () {
       error.should.be.an.Error
         .and.have.property('message')
           .and.be.equal('Invalid model type `foo`');
+    });
+
+    it('should validate even if model attribute not set', function * () {
+      var ModelType = Model.define('ValidationUndefinedAttribute', {
+        attributes: {
+          value1: { type: 'text', validation: { 'testA': true } }
+        }
+      });
+
+      var errors = yield ModelType().validate();
+
+      errors.should.be.false;
+      buffer.should.eql(['A']);
     });
 
   });
